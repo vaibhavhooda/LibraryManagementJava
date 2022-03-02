@@ -21,7 +21,7 @@
 		<input type="submit" name="publisher" value="Publisher" /><br><br>
 	</form>
 	
-	<form action="Publisher.jsp" method="post">
+	<form action="BorrowServlet" method="get">
 		<input type="submit" name="borrow" value="Borrow" />
 	</form>
 	

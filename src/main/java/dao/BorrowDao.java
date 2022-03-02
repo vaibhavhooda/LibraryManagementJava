@@ -3,7 +3,10 @@ package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import model.Borrow;
 
@@ -25,7 +28,7 @@ public class BorrowDao {
 		
 		Class.forName("com.mysql.jdbc.Driver");
 		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "");
+		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "test1234");
 		PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL)){
 			
 						
@@ -47,6 +50,43 @@ public class BorrowDao {
 				}
 		return result;
 	}		
+	
+	public static ArrayList<Borrow> getBorrowDetails() throws ClassNotFoundException {
+		
+		String SELECT_SQL = "SELECT bk.Title, bk.Author, m.m_name, bb.Due_Date, bb.Return_Date, bb.Issue_Date "
+				+ "FROM Borrow_By bb "
+				+ "join books bk on bk.Book_Id = bb.Book_Id "
+				+ "join Member m on m.m_id = bb.Member_Id";
+		ArrayList<Borrow> borrowList = new ArrayList<Borrow>();
+
+		Class.forName("com.mysql.jdbc.Driver");
+
+		try{
+			
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
+					"test1234"); 
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(SELECT_SQL);
+			 while(rs.next())
+		     {
+				 Borrow borrow = new Borrow();
+				 borrow.setBook_name(rs.getString("Title"));
+				 borrow.setAuthor_name(rs.getString("Author"));
+				 borrow.setMember_name(rs.getString("m_name"));
+				 borrow.setDue_date(rs.getString("Due_Date"));
+				 borrow.setReturn_date(rs.getString("Return_Date"));
+				 borrow.setIssue_date(rs.getString("Issue_Date"));
+				 borrowList.add(borrow);
+		     }
+		}
+
+		catch (SQLException e) {
+			System.out.print(e.getMessage());
+			printSQLException(e); // calling printSQLException function...
+		}
+		return borrowList;
+
+	}
 	
 		/*
 		 *  Exception -function for printing SQL State, Error Code and Message .. 
