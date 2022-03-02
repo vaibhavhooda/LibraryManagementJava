@@ -17,7 +17,7 @@
 		<input type="submit" name="books" value="Books" /><br><br>
 	</form>
 	
-	<form action="Publisher.jsp" method="post">
+	<form action="PublisherServlet" method="get">
 		<input type="submit" name="publisher" value="Publisher" /><br><br>
 	</form>
 	
