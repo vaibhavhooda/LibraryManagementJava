@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.sql.*;
 
 import model.Publisher;
 
@@ -14,40 +16,99 @@ public class PublisherDao {
 	 * STUDENT TBL. ID - INT FIRSTNAME - STRING LASTNAME - STRING GRADE - STRING
 	 */
 
-	public int issueBook(Publisher pb) throws ClassNotFoundException {
-		
-		// create sql statement 
-		String INSERT_USERS_SQL ="INSERT INTO student" +
-		"(id, first_name, last_name,grade) VALUES " +
-		"(?,?,?,?);";
-		
-		int result = 0;
-		
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/week6", "root", "YourPass");
-				PreparedStatement ps = connection.prepareStatement(INSERT_USERS_SQL))
-				{
-				
-				ps.setInt(1, 101);
-				//ps.setString(2, bk.getFirstname());
-				
-			System.out.println(ps);
-				
-			result=  ps.executeUpdate();	
-		
-	}
-				
-		catch (SQLException e) {
-			printSQLException(e);  // calling printSQLException function...
-				}
-		return result;
-	}		
-		/*
-		 *  Exception -function for printing SQL State, Error Code and Message .. 
-		 */
+	public static ArrayList<Publisher> getPublishers() throws ClassNotFoundException {
 
-	private void printSQLException(SQLException ex) {
+		// create sql statement
+		String SELECT_SQL = "SELECT * FROM Publisher";
+		ArrayList<Publisher> publisherList = new ArrayList<Publisher>();
+
+		Class.forName("com.mysql.jdbc.Driver");
+
+		try{
+			
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
+					"test1234"); 
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(SELECT_SQL);
+			 while(rs.next())
+		     {
+				 Publisher publisher = new Publisher();
+				 publisher.setPub_id(rs.getInt("Pub_Id"));
+				 publisher.setPub_name(rs.getString("Name"));
+				 publisher.setPub_address(rs.getString("Address"));
+				 publisherList.add(publisher);
+		     }
+		}
+
+		catch (SQLException e) {
+			System.out.print(e.getMessage());
+			printSQLException(e); // calling printSQLException function...
+		}
+		return publisherList;
+	}
+	
+	public static int register(Publisher pub) throws ClassNotFoundException {
+
+		// create sql statement
+		String INSERT_USER_SQL = "INSERT INTO Publisher" + "(Name, Address) VALUES " + "(?,?);";
+
+		int result = 0;
+
+		
+
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
+					"test1234"); 
+			PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL);
+			ps.setString(1, pub.getPub_name());
+			ps.setString(2, pub.getPub_address());
+
+			System.out.println(ps);
+
+			result = ps.executeUpdate();
+		}
+
+		catch (SQLException e) {
+			System.out.print(e.getMessage());
+			printSQLException(e); // calling printSQLException function...
+		}
+		return result;
+	}
+
+	public static int update(Publisher pub) throws ClassNotFoundException {
+
+		// create sql statement
+		String UPDATE_USER_SQL = "update Publisher " + "set Name=?, Address=? " + "where Pub_Id=?;";
+
+		int result = 0;
+
+
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
+					"test1234"); 
+			PreparedStatement ps = connection.prepareStatement(UPDATE_USER_SQL);
+			ps.setInt(3, pub.getPub_id());
+			ps.setString(1, pub.getPub_name());
+			ps.setString(2, pub.getPub_address());
+
+			System.out.println(ps);
+
+			result = ps.executeUpdate();
+		}
+
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+			printSQLException(e); // calling printSQLException function...
+		}
+		return result;
+	}
+	/*
+	 * Exception -function for printing SQL State, Error Code and Message ..
+	 */
+
+	private static void printSQLException(SQLException ex) {
 
 		for (Throwable e : ex) {
 			if (e instanceof SQLException) {
@@ -67,5 +128,5 @@ public class PublisherDao {
 		}
 
 	}
-	
+
 }

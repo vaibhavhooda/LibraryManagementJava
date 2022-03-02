@@ -24,6 +24,4 @@ public class Publisher {
 	public void setPub_id(int pub_id) {
 		this.pub_id = pub_id;
 	}
-	
-
 }
