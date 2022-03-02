@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 
 import model.Member;
 
@@ -80,6 +81,30 @@ public static int update(Member mem) throws ClassNotFoundException {
 				}
 		return result;
 	}
+
+public static ResultSet getMembers() throws ClassNotFoundException {
+	
+	// create sql statement 
+	String GET_USER_SQL = "select * from Member";
+	
+	ResultSet rs = null;
+	
+	Class.forName("com.mysql.jdbc.Driver");
+	
+	try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Assgnment3", "root", "rootpassword");
+	PreparedStatement ps = connection.prepareStatement(GET_USER_SQL)){
+		
+					
+		rs = ps.executeQuery(GET_USER_SQL);
+		
+	}
+			
+	catch (SQLException e) {
+		System.out.print(e.getMessage());
+		printSQLException(e);  // calling printSQLException function...
+			}
+	return rs;
+}	
 	
 		/*
 		 *  Exception -function for printing SQL State, Error Code and Message .. 
