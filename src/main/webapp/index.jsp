@@ -9,7 +9,7 @@
 <body>
 	<h1>Welcome to the Library Management System</h1>
 	<br>
-	<form action="Member.jsp" method="get">
+	<form action="MemberServlet" method="get">
 		<input type="submit" name="login" value="Member" /><br><br>
 	</form>
 

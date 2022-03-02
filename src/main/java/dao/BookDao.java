@@ -25,7 +25,7 @@ public class BookDao {
 		
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "");
+		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "rootpassword");
 				PreparedStatement ps = connection.prepareStatement(INSERT_BORROW_SQL))
 				{
 				

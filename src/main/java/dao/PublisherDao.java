@@ -22,12 +22,12 @@ public class PublisherDao {
 		String SELECT_SQL = "SELECT * FROM Publisher";
 		ArrayList<Publisher> publisherList = new ArrayList<Publisher>();
 
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 
 		try{
 			
 			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
-					"test1234"); 
+					"rootpassword"); 
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(SELECT_SQL);
 			 while(rs.next())
@@ -57,9 +57,9 @@ public class PublisherDao {
 		
 
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
-					"test1234"); 
+					"rootpassword"); 
 			PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL);
 			ps.setString(1, pub.getPub_name());
 			ps.setString(2, pub.getPub_address());
@@ -85,9 +85,9 @@ public class PublisherDao {
 
 
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
-					"test1234"); 
+					"rootpassword"); 
 			PreparedStatement ps = connection.prepareStatement(UPDATE_USER_SQL);
 			ps.setInt(3, pub.getPub_id());
 			ps.setString(1, pub.getPub_name());

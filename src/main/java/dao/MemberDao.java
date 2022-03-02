@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.sql.ResultSet;
 
 import model.Member;
+import model.Publisher;
 
 public class MemberDao {
 
@@ -24,9 +27,9 @@ public class MemberDao {
 		
 		int result = 0;
 		
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "");
+		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "rootpassword");
 		PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL)){
 			
 						
@@ -58,9 +61,9 @@ public static int update(Member mem) throws ClassNotFoundException {
 		
 		int result = 0;
 		
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Assgnment3", "root", "rootpassword");
+		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "rootpassword");
 		PreparedStatement ps = connection.prepareStatement(UPDATE_USER_SQL)){
 			
 			ps.setInt(6, mem.getMem_id());
@@ -82,28 +85,39 @@ public static int update(Member mem) throws ClassNotFoundException {
 		return result;
 	}
 
-public static ResultSet getMembers() throws ClassNotFoundException {
+public ArrayList<Member> getMembers() throws ClassNotFoundException {
 	
 	// create sql statement 
 	String GET_USER_SQL = "select * from Member";
 	
-	ResultSet rs = null;
+	ArrayList<Member> memberList = new ArrayList<Member>();
 	
-	Class.forName("com.mysql.jdbc.Driver");
+	Class.forName("com.mysql.cj.jdbc.Driver");
 	
-	try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Assgnment3", "root", "rootpassword");
-	PreparedStatement ps = connection.prepareStatement(GET_USER_SQL)){
+	try{
 		
-					
-		rs = ps.executeQuery(GET_USER_SQL);
-		
+		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
+				"rootpassword"); 
+		Statement statement = connection.createStatement();
+		ResultSet rs = statement.executeQuery(GET_USER_SQL);
+		 while(rs.next())
+	     {
+			 Member mmbr = new Member();
+			 mmbr.setMem_id(rs.getInt("m_id"));
+			 mmbr.setMem_name(rs.getString("m_name"));
+			 mmbr.setMem_address(rs.getString("m_address"));
+			 mmbr.setMem_type(rs.getString("m_type"));
+			 mmbr.setMem_date(rs.getString("m_start"));
+			 mmbr.setExpiry_date(rs.getString("m_expiry"));
+			 memberList.add(mmbr);
+	     }
 	}
-			
+
 	catch (SQLException e) {
 		System.out.print(e.getMessage());
-		printSQLException(e);  // calling printSQLException function...
-			}
-	return rs;
+		printSQLException(e); // calling printSQLException function...
+	}
+	return memberList;
 }	
 	
 		/*

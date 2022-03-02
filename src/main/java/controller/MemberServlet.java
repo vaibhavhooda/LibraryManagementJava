@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.MemberDao;
 import model.Member;
+import model.Publisher;
 
 /**
  * Servlet implementation class MemberServlet
@@ -37,30 +38,16 @@ public class MemberServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ArrayList<Member> memberList = new ArrayList<Member>();
 		try {
-			ResultSet rs = mdao.getMembers();
-			//HttpSession session = request.getSession();
-			
-			ArrayList results = new ArrayList();
-			  
-			while (rs.next()){
-			       ArrayList row = new ArrayList();
-			       for (int i = 1; i <= 6 ; i++){
-			           row.add(rs.getString(i));
-			       }
-			       results.add(row);
-			   }
-			
-			request.setAttribute("memberList", results);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("Member.jsp");
-	        dispatcher.forward( request, response);     
-			
-		} catch (Exception e)
-		{
-			System.out.print(e.getMessage());
+			memberList = mdao.getMembers();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		response.sendRedirect("Member.jsp?status=yes");
+		request.setAttribute("memberList", memberList);
+		response.setContentType("text/html;charset=UTF-8");
+		request.getRequestDispatcher("Member.jsp").forward(request, response);
 	}
 
 	/**
@@ -95,7 +82,7 @@ public class MemberServlet extends HttpServlet {
     			System.out.print(e.getMessage());
     			e.printStackTrace();
     		}
-    		response.sendRedirect("Member.jsp?status=yes");//  response goes to view!!
+    		response.sendRedirect("MemberServlet");
             
         }
         else if (request.getParameter("update") != null) {
@@ -122,11 +109,11 @@ public class MemberServlet extends HttpServlet {
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
-    		response.sendRedirect("Member.jsp?status=yes");//  response goes to view!!
+    		response.sendRedirect("MemberServlet");
         }
         
         else {
-        	response.sendRedirect("Member.jsp?status=no");//  response goes to view!!
+        	response.sendRedirect("MemberServlet");
         	 
         }
 		
